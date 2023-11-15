@@ -1,12 +1,14 @@
 import './App.css';
 import { React, useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import api from '../utils/api.js';
 import CurrentUserContext from '../contexts/currentUserContext.js';
 
-import Header from './Header.jsx';
+import Header from './Header/Header.jsx';
 import Main from './Main.jsx';
 import Footer from './Footer.jsx';
-import CurrentYear from './CurrentYear.jsx';
+import Register from './Register/Register.jsx';
+import Login from './Login/Login.jsx';
 
 import ImagePopup from './ImagePopup.jsx';
 import EditProfilePopup from './EditProfilePopup.jsx';
@@ -23,6 +25,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [cardToDelete, setCardToDelete] = useState({});
   const [currentUser, setCurrentUser] = useState({});
+  const [loggedIn, setLoggedIn] = useState(true);
 
   useEffect(() => {
     if (
@@ -155,49 +158,65 @@ function App() {
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
-        <Header />
-        <Main
-          onEditAvatar={handleEditAvatarClick}
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          cards={cards}
-          setCards={setCards}
-          onCardClick={handleCardClick}
-          onCardLike={handleCardLike}
-          onCardDeleteClick={handleDeleteButtonClick}
-        >
-          <EditProfilePopup
-            isOpen={isEditProfilePopupOpen}
-            onClose={closeAllPopups}
-            onUpdateUser={handleUpdateUser}
-          />
+        <Header loggedIn={loggedIn} />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Main
+                onEditAvatar={handleEditAvatarClick}
+                onEditProfile={handleEditProfileClick}
+                onAddPlace={handleAddPlaceClick}
+                cards={cards}
+                setCards={setCards}
+                onCardClick={handleCardClick}
+                onCardLike={handleCardLike}
+                onCardDeleteClick={handleDeleteButtonClick}
+              >
+                <EditProfilePopup
+                  isOpen={isEditProfilePopupOpen}
+                  onClose={closeAllPopups}
+                  onUpdateUser={handleUpdateUser}
+                />
 
-          <AddPlacePopup
-            isOpen={isAddPlacePopupOpen}
-            onClose={closeAllPopups}
-            onAddPlace={handleAddPlaceSubmit}
-          />
+                <AddPlacePopup
+                  isOpen={isAddPlacePopupOpen}
+                  onClose={closeAllPopups}
+                  onAddPlace={handleAddPlaceSubmit}
+                />
 
-          <EditAvatarPopup
-            isOpen={isEditAvatarPopupOpen}
-            onClose={closeAllPopups}
-            onUpdateAvatar={handleUpdateAvatar}
-          />
+                <EditAvatarPopup
+                  isOpen={isEditAvatarPopupOpen}
+                  onClose={closeAllPopups}
+                  onUpdateAvatar={handleUpdateAvatar}
+                />
 
-          <DeleteCardPopup
-            isOpen={isCardDeletePopupOpen}
-            onClose={closeAllPopups}
-            onCardDelete={handleCardDeleteWithPopup}
+                <DeleteCardPopup
+                  isOpen={isCardDeletePopupOpen}
+                  onClose={closeAllPopups}
+                  onCardDelete={handleCardDeleteWithPopup}
+                />
+                <ImagePopup
+                  onClose={closeAllPopups}
+                  name={selectedCard?.name}
+                  link={selectedCard?.link}
+                />
+              </Main>
+            }
           />
-          <ImagePopup
-            name={selectedCard?.name}
-            link={selectedCard?.link}
-            onClose={closeAllPopups}
+          <Route
+            path="/sign-up"
+            element={
+              <Register title="Регистрация" name="sign-up" submitButtonText="Зарегистрироваться" />
+            }
           />
-        </Main>
-        <Footer>
-          <CurrentYear />
-        </Footer>
+          <Route
+            path="/sign-in"
+            element={<Login title="Вход" name="sign-in" submitButtonText="Войти" />}
+          />
+        </Routes>
+
+        {!loggedIn && <Footer />}
       </CurrentUserContext.Provider>
     </div>
   );
