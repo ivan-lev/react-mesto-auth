@@ -1,0 +1,23 @@
+.auth-window {
+  width: 358px;
+  margin: 0 auto 20px;
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.auth-window__text {
+  text-align: center;
+  margin: 15px 0 0;
+}
+
+.auth-window__link {
+  color: #fff;
+  text-decoration: none;
+}
+
+.auth-window__link:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
