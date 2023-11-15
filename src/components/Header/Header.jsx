@@ -8,6 +8,14 @@ function Header({ loggedIn }) {
       <a href="#" className="header__logo"></a>
       <Routes>
         <Route
+          path="/"
+          element={
+            <Link className={styles['header-link']} to="/">
+              Выйти
+            </Link>
+          }
+        ></Route>
+        <Route
           path="/sign-up"
           element={
             <Link className={styles['header-link']} to="/sign-in">
