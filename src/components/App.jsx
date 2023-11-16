@@ -15,6 +15,7 @@ import EditProfilePopup from './EditProfilePopup.jsx';
 import EditAvatarPopup from './EditAvatarPopup.jsx';
 import AddPlacePopup from './AddPlacePopup.jsx';
 import DeleteCardPopup from './DeleteCardPopup.jsx';
+import ProtectedRouteElement from './ProtectedRoute.jsx';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
@@ -155,6 +156,46 @@ function App() {
       .catch(error => console.error('Ошибка добавления нового места: ', error));
   };
 
+  const mainContent = () => {
+    return (
+      <Main
+        onEditAvatar={handleEditAvatarClick}
+        onEditProfile={handleEditProfileClick}
+        onAddPlace={handleAddPlaceClick}
+        cards={cards}
+        setCards={setCards}
+        onCardClick={handleCardClick}
+        onCardLike={handleCardLike}
+        onCardDeleteClick={handleDeleteButtonClick}
+      >
+        <EditProfilePopup
+          isOpen={isEditProfilePopupOpen}
+          onClose={closeAllPopups}
+          onUpdateUser={handleUpdateUser}
+        />
+
+        <AddPlacePopup
+          isOpen={isAddPlacePopupOpen}
+          onClose={closeAllPopups}
+          onAddPlace={handleAddPlaceSubmit}
+        />
+
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closeAllPopups}
+          onUpdateAvatar={handleUpdateAvatar}
+        />
+
+        <DeleteCardPopup
+          isOpen={isCardDeletePopupOpen}
+          onClose={closeAllPopups}
+          onCardDelete={handleCardDeleteWithPopup}
+        />
+        <ImagePopup onClose={closeAllPopups} name={selectedCard?.name} link={selectedCard?.link} />
+      </Main>
+    );
+  };
+
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
@@ -162,51 +203,7 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={
-              loggedIn ? (
-                <Main
-                  onEditAvatar={handleEditAvatarClick}
-                  onEditProfile={handleEditProfileClick}
-                  onAddPlace={handleAddPlaceClick}
-                  cards={cards}
-                  setCards={setCards}
-                  onCardClick={handleCardClick}
-                  onCardLike={handleCardLike}
-                  onCardDeleteClick={handleDeleteButtonClick}
-                >
-                  <EditProfilePopup
-                    isOpen={isEditProfilePopupOpen}
-                    onClose={closeAllPopups}
-                    onUpdateUser={handleUpdateUser}
-                  />
-
-                  <AddPlacePopup
-                    isOpen={isAddPlacePopupOpen}
-                    onClose={closeAllPopups}
-                    onAddPlace={handleAddPlaceSubmit}
-                  />
-
-                  <EditAvatarPopup
-                    isOpen={isEditAvatarPopupOpen}
-                    onClose={closeAllPopups}
-                    onUpdateAvatar={handleUpdateAvatar}
-                  />
-
-                  <DeleteCardPopup
-                    isOpen={isCardDeletePopupOpen}
-                    onClose={closeAllPopups}
-                    onCardDelete={handleCardDeleteWithPopup}
-                  />
-                  <ImagePopup
-                    onClose={closeAllPopups}
-                    name={selectedCard?.name}
-                    link={selectedCard?.link}
-                  />
-                </Main>
-              ) : (
-                <Navigate to="sign-in" replace />
-              )
-            }
+            element={<ProtectedRouteElement element={mainContent} loggedIn={loggedIn} />}
           />
           <Route
             path="/sign-up"
