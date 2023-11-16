@@ -1,6 +1,6 @@
 import './App.css';
 import { React, useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import api from '../utils/api.js';
 import CurrentUserContext from '../contexts/currentUserContext.js';
 
@@ -25,7 +25,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [cardToDelete, setCardToDelete] = useState({});
   const [currentUser, setCurrentUser] = useState({});
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     if (
@@ -163,45 +163,49 @@ function App() {
           <Route
             path="/"
             element={
-              <Main
-                onEditAvatar={handleEditAvatarClick}
-                onEditProfile={handleEditProfileClick}
-                onAddPlace={handleAddPlaceClick}
-                cards={cards}
-                setCards={setCards}
-                onCardClick={handleCardClick}
-                onCardLike={handleCardLike}
-                onCardDeleteClick={handleDeleteButtonClick}
-              >
-                <EditProfilePopup
-                  isOpen={isEditProfilePopupOpen}
-                  onClose={closeAllPopups}
-                  onUpdateUser={handleUpdateUser}
-                />
+              loggedIn ? (
+                <Main
+                  onEditAvatar={handleEditAvatarClick}
+                  onEditProfile={handleEditProfileClick}
+                  onAddPlace={handleAddPlaceClick}
+                  cards={cards}
+                  setCards={setCards}
+                  onCardClick={handleCardClick}
+                  onCardLike={handleCardLike}
+                  onCardDeleteClick={handleDeleteButtonClick}
+                >
+                  <EditProfilePopup
+                    isOpen={isEditProfilePopupOpen}
+                    onClose={closeAllPopups}
+                    onUpdateUser={handleUpdateUser}
+                  />
 
-                <AddPlacePopup
-                  isOpen={isAddPlacePopupOpen}
-                  onClose={closeAllPopups}
-                  onAddPlace={handleAddPlaceSubmit}
-                />
+                  <AddPlacePopup
+                    isOpen={isAddPlacePopupOpen}
+                    onClose={closeAllPopups}
+                    onAddPlace={handleAddPlaceSubmit}
+                  />
 
-                <EditAvatarPopup
-                  isOpen={isEditAvatarPopupOpen}
-                  onClose={closeAllPopups}
-                  onUpdateAvatar={handleUpdateAvatar}
-                />
+                  <EditAvatarPopup
+                    isOpen={isEditAvatarPopupOpen}
+                    onClose={closeAllPopups}
+                    onUpdateAvatar={handleUpdateAvatar}
+                  />
 
-                <DeleteCardPopup
-                  isOpen={isCardDeletePopupOpen}
-                  onClose={closeAllPopups}
-                  onCardDelete={handleCardDeleteWithPopup}
-                />
-                <ImagePopup
-                  onClose={closeAllPopups}
-                  name={selectedCard?.name}
-                  link={selectedCard?.link}
-                />
-              </Main>
+                  <DeleteCardPopup
+                    isOpen={isCardDeletePopupOpen}
+                    onClose={closeAllPopups}
+                    onCardDelete={handleCardDeleteWithPopup}
+                  />
+                  <ImagePopup
+                    onClose={closeAllPopups}
+                    name={selectedCard?.name}
+                    link={selectedCard?.link}
+                  />
+                </Main>
+              ) : (
+                <Navigate to="sign-in" replace />
+              )
             }
           />
           <Route
@@ -212,6 +216,10 @@ function App() {
           />
           <Route
             path="/sign-in"
+            element={<Login title="Вход" name="sign-in" submitButtonText="Войти" />}
+          />
+          <Route
+            path="/*"
             element={<Login title="Вход" name="sign-in" submitButtonText="Войти" />}
           />
         </Routes>
