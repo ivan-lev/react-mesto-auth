@@ -156,6 +156,10 @@ function App() {
       .catch(error => console.error('Ошибка добавления нового места: ', error));
   };
 
+  const handleLogin = () => {
+    setLoggedIn(true);
+  };
+
   const mainContent = () => {
     return (
       <Main
@@ -213,7 +217,14 @@ function App() {
           />
           <Route
             path="/sign-in"
-            element={<Login title="Вход" name="sign-in" submitButtonText="Войти" />}
+            element={
+              <Login
+                title="Вход"
+                name="sign-in"
+                submitButtonText="Войти"
+                handleLogin={handleLogin}
+              />
+            }
           />
           <Route
             path="/*"
