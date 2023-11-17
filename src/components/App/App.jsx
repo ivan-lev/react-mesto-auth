@@ -226,7 +226,7 @@ function App() {
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
-        <Header userEmail={userEmail} setUserEmail={setUserEmail} />
+        <Header userEmail={userEmail} setUserEmail={setUserEmail} setLoggedIn={setLoggedIn} />
         <Routes>
           <Route
             path="/"

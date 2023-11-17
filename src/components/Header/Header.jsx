@@ -2,13 +2,14 @@ import React from 'react';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
 
-function Header({ userEmail, setUserEmail }) {
+function Header({ userEmail, setUserEmail, setLoggedIn }) {
   const navigate = useNavigate();
 
   const signOut = () => {
     localStorage.removeItem('token');
-    navigate('/sign-in', { replace: true });
+    setLoggedIn(false);
     setUserEmail('');
+    navigate('/sign-in', { replace: true });
   };
 
   return (
