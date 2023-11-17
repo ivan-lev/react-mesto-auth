@@ -1,7 +1,8 @@
 import './App.css';
 import { React, useState, useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import api from '../../utils/api.js';
+import { checkTokenValidity } from '../../utils/auth.js';
 import CurrentUserContext from '../../contexts/currentUserContext.js';
 
 import Header from '../Header/Header.jsx';
@@ -27,6 +28,9 @@ function App() {
   const [cardToDelete, setCardToDelete] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (
@@ -63,6 +67,10 @@ function App() {
       .then(response => setCards(response))
       .catch(error => console.error('Ошибка получения карточек: ', error));
   }, []);
+
+  useEffect(() => {
+    tokenCheck();
+  }, [loggedIn]);
 
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
@@ -156,8 +164,23 @@ function App() {
       .catch(error => console.error('Ошибка добавления нового места: ', error));
   };
 
-  const handleLogin = () => {
+  const handleLogin = email => {
+    setUserEmail(email);
     setLoggedIn(true);
+  };
+
+  const tokenCheck = () => {
+    if (localStorage.getItem('token')) {
+      const token = localStorage.getItem('token');
+
+      checkTokenValidity(token).then(result => {
+        if (result) {
+          setUserEmail(result.data.email);
+          setLoggedIn(true);
+          navigate('/', { replace: true });
+        }
+      });
+    }
   };
 
   const mainContent = () => {
@@ -203,7 +226,7 @@ function App() {
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
-        <Header loggedIn={loggedIn} />
+        <Header userEmail={userEmail} setUserEmail={setUserEmail} />
         <Routes>
           <Route
             path="/"
@@ -232,7 +255,7 @@ function App() {
           />
         </Routes>
 
-        {!loggedIn && <Footer />}
+        {loggedIn && <Footer />}
       </CurrentUserContext.Provider>
     </div>
   );

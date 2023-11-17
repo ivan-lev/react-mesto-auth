@@ -34,3 +34,16 @@ export const authorize = (password, email) => {
     })
     .catch(err => console.log(err));
 };
+
+export const checkTokenValidity = token => {
+  return fetch(`${BASE_URL}/users/me`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  })
+    .then(res => res.json())
+    .then(data => data)
+    .catch(error => console.log('Ошибка проверки токена: ' + error));
+};
