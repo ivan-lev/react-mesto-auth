@@ -1,21 +1,21 @@
 import './App.css';
 import { React, useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import api from '../utils/api.js';
-import CurrentUserContext from '../contexts/currentUserContext.js';
+import api from '../../utils/api.js';
+import CurrentUserContext from '../../contexts/currentUserContext.js';
 
-import Header from './Header/Header.jsx';
-import Main from './Main.jsx';
-import Footer from './Footer.jsx';
-import Register from './Register/Register.jsx';
-import Login from './Login/Login.jsx';
+import Header from '../Header/Header.jsx';
+import Main from '../Main.jsx';
+import Footer from '../Footer.jsx';
+import Register from '../Register/Register.jsx';
+import Login from '../Login/Login.jsx';
 
-import ImagePopup from './ImagePopup.jsx';
-import EditProfilePopup from './EditProfilePopup.jsx';
-import EditAvatarPopup from './EditAvatarPopup.jsx';
-import AddPlacePopup from './AddPlacePopup.jsx';
-import DeleteCardPopup from './DeleteCardPopup.jsx';
-import ProtectedRouteElement from './ProtectedRoute.jsx';
+import ImagePopup from '../ImagePopup.jsx';
+import EditProfilePopup from '../EditProfilePopup.jsx';
+import EditAvatarPopup from '../EditAvatarPopup.jsx';
+import AddPlacePopup from '../AddPlacePopup.jsx';
+import DeleteCardPopup from '../DeleteCardPopup.jsx';
+import ProtectedRouteElement from '../ProtectedRoute.jsx';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
