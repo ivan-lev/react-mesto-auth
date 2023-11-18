@@ -29,11 +29,9 @@ function Login({ title, name, submitButtonText, handleLogin }) {
     auth
       .authorize(formValue.password, formValue.email)
       .then(data => {
-        //console.log(data);
         if (data.token) {
           handleLogin(formValue.email);
           setFormValue({ email: '', password: '' });
-          //handleLogin();
           navigate('/', { replace: true });
         }
       })
