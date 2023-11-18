@@ -230,7 +230,9 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<ProtectedRouteElement element={mainContent} loggedIn={loggedIn} />}
+            element={
+              <ProtectedRouteElement element={loggedIn && mainContent} loggedIn={loggedIn} />
+            }
           />
           <Route
             path="/sign-up"
