@@ -164,11 +164,6 @@ function App() {
       .catch(error => console.error('Ошибка добавления нового места: ', error));
   };
 
-  const handleLogin = email => {
-    setUserEmail(email);
-    setLoggedIn(true);
-  };
-
   const tokenCheck = () => {
     if (localStorage.getItem('token')) {
       const token = localStorage.getItem('token');
@@ -247,7 +242,8 @@ function App() {
                 title="Вход"
                 name="sign-in"
                 submitButtonText="Войти"
-                handleLogin={handleLogin}
+                setUserEmail={setUserEmail}
+                setLoggedIn={setLoggedIn}
               />
             }
           />
