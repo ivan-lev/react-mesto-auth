@@ -51,15 +51,13 @@ function Register({ title, name, submitButtonText }) {
     auth
       .register(formValue.password, formValue.email)
       .then(response => {
-        if (response.status === 400) {
-          setRegistrationStatus(false);
-        } else {
-          setRegistrationStatus(true);
-        }
+        setRegistrationStatus(true);
         setShowTooltipWindow(true);
       })
       .catch(error => {
-        console.log('Ошибка регистрации' + error);
+        console.log('Ошибка регистрации: ' + error);
+        setRegistrationStatus(false);
+        setShowTooltipWindow(true);
       });
   };
 
