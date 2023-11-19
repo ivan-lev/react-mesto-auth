@@ -1,23 +1,13 @@
 export const BASE_URL = 'https://auth.nomoreparties.co';
 
 export const register = (password, email) => {
-  return (
-    fetch(`${BASE_URL}/signup`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ password, email })
-    })
-      .then(response => {
-        // return response.json();
-        return response;
-      })
-      // .then(res => {
-      //   return res;
-      // })
-      .catch(err => console.log(err))
-  );
+  return fetch(`${BASE_URL}/signup`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ password, email })
+  }).then(response => checkResponseStatus(response));
 };
 
 export const authorize = (password, email) => {
@@ -27,12 +17,7 @@ export const authorize = (password, email) => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({ password, email })
-  })
-    .then(response => response.json())
-    .then(data => {
-      return data;
-    })
-    .catch(err => console.log(err));
+  }).then(response => checkResponseStatus(response));
 };
 
 export const checkTokenValidity = token => {
@@ -42,10 +27,12 @@ export const checkTokenValidity = token => {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     }
-  })
-    .then(res => res.json())
-    .then(data => {
-      return data;
-    })
-    .catch(error => console.log('Ошибка проверки токена: ' + error));
+  }).then(response => checkResponseStatus(response));
+};
+
+const checkResponseStatus = response => {
+  if (!response.ok) {
+    return Promise.reject(`Ошибка: ${response.status}`);
+  }
+  return response.json();
 };
