@@ -55,21 +55,19 @@ function App() {
   ]);
 
   useEffect(() => {
-    api
-      .getUserInfo()
-      .then(response => setCurrentUser(response))
-      .catch(error => console.error('Ошибка получения информации о пользователе: ', error));
-  }, []);
-
-  useEffect(() => {
-    api
-      .getInitialCards()
-      .then(response => setCards(response))
-      .catch(error => console.error('Ошибка получения карточек: ', error));
-  }, []);
-
-  useEffect(() => {
     tokenCheck();
+
+    if (loggedIn) {
+      api
+        .getUserInfo()
+        .then(response => setCurrentUser(response))
+        .catch(error => console.error('Ошибка получения информации о пользователе: ', error));
+
+      api
+        .getInitialCards()
+        .then(response => setCards(response))
+        .catch(error => console.error('Ошибка получения карточек: ', error));
+    }
   }, [loggedIn]);
 
   const handleEditAvatarClick = () => {
