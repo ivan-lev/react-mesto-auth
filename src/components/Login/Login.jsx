@@ -29,17 +29,16 @@ function Login({ title, name, submitButtonText, setUserEmail, setLoggedIn }) {
     auth
       .authorize(formValue.password, formValue.email)
       .then(data => {
-        if (data.token) {
-          localStorage.setItem('token', data.token);
-          setUserEmail(formValue.email);
-          setLoggedIn(true);
-          setFormValue({ email: '', password: '' });
-          navigate('/', { replace: true });
-        } else {
-          alert('Неверные логин или пароль');
-        }
+        localStorage.setItem('token', data.token);
+        setUserEmail(formValue.email);
+        setLoggedIn(true);
+        setFormValue({ email: '', password: '' });
+        navigate('/', { replace: true });
       })
-      .catch(err => console.log(err));
+      .catch(error => {
+        console.log(error);
+        alert('Неверные логин или пароль');
+      });
   };
 
   return (
