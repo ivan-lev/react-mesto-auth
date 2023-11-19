@@ -4,7 +4,7 @@ import AuthForm from '../AuthForm/AuthForm.jsx';
 import * as auth from '../../utils/auth.js';
 import styles from './Login.module.css';
 
-function Login({ title, name, submitButtonText, setUserEmail, setLoggedIn }) {
+function Login({ title, name, submitButtonText, onLogin }) {
   const [formValue, setFormValue] = useState({
     email: '',
     password: ''
@@ -23,22 +23,7 @@ function Login({ title, name, submitButtonText, setUserEmail, setLoggedIn }) {
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (!formValue.email || !formValue.password) {
-      return;
-    }
-    auth
-      .authorize(formValue.password, formValue.email)
-      .then(data => {
-        localStorage.setItem('token', data.token);
-        setUserEmail(formValue.email);
-        setLoggedIn(true);
-        setFormValue({ email: '', password: '' });
-        navigate('/', { replace: true });
-      })
-      .catch(error => {
-        console.log(error);
-        alert('Неверные логин или пароль');
-      });
+    onLogin(formValue.password, formValue.email);
   };
 
   return (

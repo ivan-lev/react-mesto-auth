@@ -2,7 +2,7 @@ import './App.css';
 import { React, useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import api from '../../utils/api.js';
-import { checkTokenValidity } from '../../utils/auth.js';
+import * as auth from '../../utils/auth.js';
 import CurrentUserContext from '../../contexts/currentUserContext.js';
 
 import Header from '../Header/Header.jsx';
@@ -168,7 +168,8 @@ function App() {
     if (localStorage.getItem('token')) {
       const token = localStorage.getItem('token');
 
-      checkTokenValidity(token)
+      auth
+        .checkTokenValidity(token)
         .then(result => {
           setUserEmail(result.data.email);
           setLoggedIn(true);
@@ -176,6 +177,24 @@ function App() {
         })
         .catch(error => console.log('Ошибка проверки токена: ' + error));
     }
+  };
+
+  const handleLogin = (password, email) => {
+    if (!email || !password) {
+      return;
+    }
+    auth
+      .authorize(password, email)
+      .then(data => {
+        localStorage.setItem('token', data.token);
+        setUserEmail(email);
+        setLoggedIn(true);
+        navigate('/', { replace: true });
+      })
+      .catch(error => {
+        console.log(error);
+        alert('Неверные логин или пароль');
+      });
   };
 
   const mainContent = () => {
@@ -242,8 +261,9 @@ function App() {
                 title="Вход"
                 name="sign-in"
                 submitButtonText="Войти"
-                setUserEmail={setUserEmail}
-                setLoggedIn={setLoggedIn}
+                //setUserEmail={setUserEmail}
+                //setLoggedIn={setLoggedIn}
+                onLogin={handleLogin}
               />
             }
           />
