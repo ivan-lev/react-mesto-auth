@@ -1,7 +1,15 @@
 import React from 'react';
 import styles from './AuthForm.module.css';
 
-function AuthForm({ title, name, submitButtonText, onChange, onSubmit, ...props }) {
+function AuthForm({
+  title,
+  name,
+  submitButtonText,
+  onChange,
+  onSubmit,
+  autocompleteParams,
+  ...props
+}) {
   return (
     <>
       <p className={`popup__heading ${styles['auth-form__heading']}`}>{title}</p>
@@ -14,6 +22,7 @@ function AuthForm({ title, name, submitButtonText, onChange, onSubmit, ...props 
         <fieldset className="popup__fieldset">
           <input
             type="email"
+            autoComplete={autocompleteParams.email}
             placeholder="Email"
             id="email"
             name="email"
@@ -26,6 +35,7 @@ function AuthForm({ title, name, submitButtonText, onChange, onSubmit, ...props 
         <fieldset className="popup__fieldset">
           <input
             type="password"
+            autoComplete={autocompleteParams.password}
             placeholder="Пароль"
             id="password"
             name="password"

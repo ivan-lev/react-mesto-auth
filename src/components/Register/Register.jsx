@@ -71,6 +71,7 @@ function Register({ title, name, submitButtonText }) {
         submitButtonText={submitButtonText}
         onChange={handleChange}
         onSubmit={handleSubmit}
+        autocompleteParams={{ email: 'email', password: 'new-password' }}
       />
       <p className={styles['auth-window__text']}>
         Уже зарегистрированы?&nbsp;

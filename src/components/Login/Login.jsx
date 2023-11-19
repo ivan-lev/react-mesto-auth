@@ -46,6 +46,7 @@ function Login({ title, name, submitButtonText, handleLogin }) {
         submitButtonText={submitButtonText}
         onChange={handleChange}
         onSubmit={handleSubmit}
+        autocompleteParams={{ email: 'email', password: 'current-password' }}
       />
     </section>
   );
