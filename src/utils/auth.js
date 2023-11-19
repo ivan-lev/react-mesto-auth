@@ -30,10 +30,7 @@ export const authorize = (password, email) => {
   })
     .then(response => response.json())
     .then(data => {
-      if (data.token) {
-        localStorage.setItem('token', data.token);
-        return data;
-      }
+      return data;
     })
     .catch(err => console.log(err));
 };
@@ -47,6 +44,8 @@ export const checkTokenValidity = token => {
     }
   })
     .then(res => res.json())
-    .then(data => data)
+    .then(data => {
+      return data;
+    })
     .catch(error => console.log('Ошибка проверки токена: ' + error));
 };
