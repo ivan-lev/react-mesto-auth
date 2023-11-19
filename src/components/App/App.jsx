@@ -168,13 +168,13 @@ function App() {
     if (localStorage.getItem('token')) {
       const token = localStorage.getItem('token');
 
-      checkTokenValidity(token).then(result => {
-        if (result) {
+      checkTokenValidity(token)
+        .then(result => {
           setUserEmail(result.data.email);
           setLoggedIn(true);
           navigate('/', { replace: true });
-        }
-      });
+        })
+        .catch(error => console.log('Ошибка проверки токена: ' + error));
     }
   };
 
