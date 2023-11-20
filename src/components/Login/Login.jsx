@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import AuthForm from '../AuthForm/AuthForm.jsx';
-import * as auth from '../../utils/auth.js';
 import styles from './Login.module.css';
 
-function Login({ title, name, submitButtonText, onLogin }) {
+function Login({ title, name, submitButtonText, onLogin, ...props }) {
   const [formValue, setFormValue] = useState({
     email: '',
     password: ''
   });
-
-  const navigate = useNavigate();
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -36,6 +32,7 @@ function Login({ title, name, submitButtonText, onLogin }) {
         onSubmit={handleSubmit}
         autocompleteParams={{ email: 'email', password: 'current-password' }}
       />
+      {props.children}
     </section>
   );
 }

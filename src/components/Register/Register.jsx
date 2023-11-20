@@ -1,42 +1,13 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import AuthForm from '../AuthForm/AuthForm.jsx';
-import InfoToolTip from '../InfoToolTip/InfoTooltip.jsx';
-import * as auth from '../../utils/auth.js';
 import styles from './Register.module.css';
 
-import successIcon from '../../images/icon-sucsess.svg';
-import errorIcon from '../../images/icon-error.svg';
-
-function Register({ title, name, submitButtonText }) {
+function Register({ title, name, submitButtonText, onRegister, ...props }) {
   const [formValue, setFormValue] = useState({
     email: '',
     password: ''
   });
-  const [registrationStatus, setRegistrationStatus] = useState(null);
-  const [showTooltipWindow, setShowTooltipWindow] = useState(false);
-
-  const tooltipTypes = {
-    success: {
-      icon: successIcon,
-      message: 'Вы успешно зарегистрировались!',
-      onClose: () => {
-        setShowTooltipWindow(false);
-        navigate('/sign-in', { replace: true });
-        setRegistrationStatus(null);
-      }
-    },
-    error: {
-      icon: errorIcon,
-      message: 'Что-то пошло не так! Попробуйте ещё раз.',
-      onClose: () => {
-        setShowTooltipWindow(false);
-        setRegistrationStatus(null);
-      }
-    }
-  };
-
-  const navigate = useNavigate();
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -48,17 +19,7 @@ function Register({ title, name, submitButtonText }) {
 
   const handleSubmit = e => {
     e.preventDefault();
-    auth
-      .register(formValue.password, formValue.email)
-      .then(response => {
-        setRegistrationStatus(true);
-        setShowTooltipWindow(true);
-      })
-      .catch(error => {
-        console.log('Ошибка регистрации: ' + error);
-        setRegistrationStatus(false);
-        setShowTooltipWindow(true);
-      });
+    onRegister(formValue.password, formValue.email);
   };
 
   return (
@@ -77,13 +38,7 @@ function Register({ title, name, submitButtonText }) {
           Войти
         </Link>
       </p>
-
-      {showTooltipWindow && (
-        <InfoToolTip
-          content={registrationStatus ? tooltipTypes.success : tooltipTypes.error}
-          isOpened={showTooltipWindow}
-        />
-      )}
+      {props.children}
     </section>
   );
 }
