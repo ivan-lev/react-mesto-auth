@@ -4,6 +4,7 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import api from '../../utils/api.js';
 import * as auth from '../../utils/auth.js';
 import CurrentUserContext from '../../contexts/currentUserContext.js';
+import { TooltipContext, tooltipContent } from '../../contexts/tooltipContext.js';
 
 import Header from '../Header/Header.jsx';
 import Main from '../Main.jsx';
@@ -16,6 +17,8 @@ import EditProfilePopup from '../EditProfilePopup.jsx';
 import EditAvatarPopup from '../EditAvatarPopup.jsx';
 import AddPlacePopup from '../AddPlacePopup.jsx';
 import DeleteCardPopup from '../DeleteCardPopup.jsx';
+import InfoToolTip from '../InfoToolTip/InfoTooltip.jsx';
+
 import ProtectedRouteElement from '../ProtectedRoute.jsx';
 
 function App() {
@@ -29,6 +32,8 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState(null);
+  const [isTooltipShown, setIsTooltipShown] = useState(false);
+  const [currentTooltipContent, setCurrentTooltipContent] = useState('default');
 
   const navigate = useNavigate();
 
@@ -38,7 +43,8 @@ function App() {
       isEditProfilePopupOpen ||
       isAddPlacePopupOpen ||
       selectedCard ||
-      isCardDeletePopupOpen
+      isCardDeletePopupOpen ||
+      isTooltipShown
     ) {
       document.addEventListener('keyup', handleEscClose);
     }
@@ -51,7 +57,8 @@ function App() {
     isEditProfilePopupOpen,
     isAddPlacePopupOpen,
     isCardDeletePopupOpen,
-    selectedCard
+    selectedCard,
+    isTooltipShown
   ]);
 
   useEffect(() => {
@@ -106,6 +113,8 @@ function App() {
     if (cardToDelete) {
       setCardToDelete({});
     }
+    setIsTooltipShown(false);
+    setTimeout(() => setCurrentTooltipContent('default'), 500);
   };
 
   const handleCardLike = card => {
@@ -191,7 +200,23 @@ function App() {
       })
       .catch(error => {
         console.log(error);
-        alert('Неверные логин или пароль');
+        setCurrentTooltipContent('signinError');
+        setIsTooltipShown(true);
+      });
+  };
+
+  const handleRegister = (password, email) => {
+    auth
+      .register(password, email)
+      .then(response => {
+        setCurrentTooltipContent('registrationSuccess');
+        setIsTooltipShown(true);
+        navigate('/sign-in', { replace: true });
+      })
+      .catch(error => {
+        console.log('Ошибка регистрации: ' + error);
+        setCurrentTooltipContent('registrationError');
+        setIsTooltipShown(true);
       });
   };
 
@@ -238,40 +263,44 @@ function App() {
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
-        <Header userEmail={userEmail} setUserEmail={setUserEmail} setLoggedIn={setLoggedIn} />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <ProtectedRouteElement element={loggedIn && mainContent} loggedIn={loggedIn} />
-            }
+        <TooltipContext.Provider value={tooltipContent}>
+          <Header userEmail={userEmail} setUserEmail={setUserEmail} setLoggedIn={setLoggedIn} />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <ProtectedRouteElement element={loggedIn && mainContent} loggedIn={loggedIn} />
+              }
+            />
+            <Route
+              path="/sign-up"
+              element={
+                <Register
+                  title="Регистрация"
+                  name="sign-up"
+                  submitButtonText="Зарегистрироваться"
+                  onRegister={handleRegister}
+                />
+              }
+            />
+            <Route
+              path="/sign-in"
+              element={
+                <Login title="Вход" name="sign-in" submitButtonText="Войти" onLogin={handleLogin} />
+              }
+            />
+            <Route
+              path="/*"
+              element={<Login title="Вход" name="sign-in" submitButtonText="Войти" />}
+            />
+          </Routes>
+          <InfoToolTip
+            isOpened={isTooltipShown}
+            toShow={currentTooltipContent}
+            onClose={closeAllPopups}
           />
-          <Route
-            path="/sign-up"
-            element={
-              <Register title="Регистрация" name="sign-up" submitButtonText="Зарегистрироваться" />
-            }
-          />
-          <Route
-            path="/sign-in"
-            element={
-              <Login
-                title="Вход"
-                name="sign-in"
-                submitButtonText="Войти"
-                //setUserEmail={setUserEmail}
-                //setLoggedIn={setLoggedIn}
-                onLogin={handleLogin}
-              />
-            }
-          />
-          <Route
-            path="/*"
-            element={<Login title="Вход" name="sign-in" submitButtonText="Войти" />}
-          />
-        </Routes>
-
-        {loggedIn && <Footer />}
+          {loggedIn && <Footer />}
+        </TooltipContext.Provider>
       </CurrentUserContext.Provider>
     </div>
   );
