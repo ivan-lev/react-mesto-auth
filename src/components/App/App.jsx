@@ -63,7 +63,9 @@ function App() {
 
   useEffect(() => {
     tokenCheck();
+  }, []);
 
+  useEffect(() => {
     if (loggedIn) {
       api
         .getUserInfo()
@@ -194,8 +196,8 @@ function App() {
       .authorize(password, email)
       .then(data => {
         localStorage.setItem('token', data.token);
-        setUserEmail(email);
         setLoggedIn(true);
+        setUserEmail(email);
         navigate('/', { replace: true });
       })
       .catch(error => {
@@ -288,10 +290,6 @@ function App() {
               element={
                 <Login title="Вход" name="sign-in" submitButtonText="Войти" onLogin={handleLogin} />
               }
-            />
-            <Route
-              path="/*"
-              element={<Login title="Вход" name="sign-in" submitButtonText="Войти" />}
             />
           </Routes>
           <InfoToolTip
