@@ -1,17 +1,8 @@
 import React from 'react';
-import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
 import styles from './Header.module.css';
 
-function Header({ userEmail, setUserEmail, setLoggedIn }) {
-  const navigate = useNavigate();
-
-  const signOut = () => {
-    localStorage.removeItem('token');
-    setLoggedIn(false);
-    setUserEmail('');
-    navigate('/sign-in', { replace: true });
-  };
-
+function Header({ userEmail, onSignOut }) {
   return (
     <header className="header">
       <a href="#" className="header__logo"></a>
@@ -21,7 +12,7 @@ function Header({ userEmail, setUserEmail, setLoggedIn }) {
           element={
             <span className={styles['header-content']}>
               <span className={styles['header-email']}>{userEmail}</span>
-              <span className={styles['header-link']} onClick={signOut}>
+              <span className={styles['header-link']} onClick={onSignOut}>
                 Выйти
               </span>
             </span>

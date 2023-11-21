@@ -22,6 +22,8 @@ import InfoToolTip from '../InfoToolTip/InfoTooltip.jsx';
 import ProtectedRouteElement from '../ProtectedRoute.jsx';
 
 function App() {
+  const localLoggedInState = JSON.parse(localStorage.getItem('loggedIn'));
+  const [loggedIn, setLoggedIn] = useState(localLoggedInState);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
@@ -30,7 +32,6 @@ function App() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [cardToDelete, setCardToDelete] = useState({});
   const [currentUser, setCurrentUser] = useState({});
-  const [loggedIn, setLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState(null);
   const [isTooltipShown, setIsTooltipShown] = useState(false);
   const [currentTooltipContent, setCurrentTooltipContent] = useState('default');
@@ -196,6 +197,7 @@ function App() {
       .authorize(password, email)
       .then(data => {
         localStorage.setItem('token', data.token);
+        localStorage.setItem('loggedIn', true);
         setLoggedIn(true);
         setUserEmail(email);
         navigate('/', { replace: true });
@@ -205,6 +207,14 @@ function App() {
         setCurrentTooltipContent('signinError');
         setIsTooltipShown(true);
       });
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('loggedIn');
+    setLoggedIn(false);
+    setUserEmail('');
+    navigate('/sign-in', { replace: true });
   };
 
   const handleRegister = (password, email) => {
@@ -266,7 +276,7 @@ function App() {
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
         <TooltipContext.Provider value={tooltipContent}>
-          <Header userEmail={userEmail} setUserEmail={setUserEmail} setLoggedIn={setLoggedIn} />
+          <Header userEmail={userEmail} onSignOut={handleSignOut} />
           <Routes>
             <Route
               path="/"
