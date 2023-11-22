@@ -19,8 +19,8 @@ export const tooltipContent = {
     icon: errorIcon,
     message: 'Не удалось войти! Попробуйте ещё раз.'
   },
-  notExist: {
+  pageNotFound: {
     icon: errorIcon,
-    message: 'Такой страницы не существует!'
+    message: 'Страницы не существует. Сейчас перенаправим вас.'
   }
 };
