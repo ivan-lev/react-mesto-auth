@@ -20,6 +20,7 @@ import DeleteCardPopup from '../DeleteCardPopup.jsx';
 import InfoToolTip from '../InfoToolTip/InfoTooltip.jsx';
 
 import ProtectedRouteElement from '../ProtectedRoute.jsx';
+import PageNotFound from '../PageNotFound/PageNotFound.jsx';
 
 function App() {
   const localLoggedInState = JSON.parse(localStorage.getItem('loggedIn'));
@@ -182,8 +183,10 @@ function App() {
         .checkTokenValidity(token)
         .then(result => {
           setUserEmail(result.data.email);
-          setLoggedIn(true);
-          navigate('/', { replace: true });
+          if (!loggedIn) {
+            setLoggedIn(true);
+            navigate('/', { replace: true });
+          }
         })
         .catch(error => console.log('Ошибка проверки токена: ' + error));
     }
@@ -301,6 +304,7 @@ function App() {
                 <Login title="Вход" name="sign-in" submitButtonText="Войти" onLogin={handleLogin} />
               }
             />
+            <Route path="*" element={<PageNotFound />} />
           </Routes>
           <InfoToolTip
             isOpened={isTooltipShown}
