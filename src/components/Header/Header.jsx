@@ -34,6 +34,7 @@ function Header({ userEmail, onSignOut }) {
             </Link>
           }
         ></Route>
+        <Route path="*" element={<span></span>} />
       </Routes>
     </header>
   );
