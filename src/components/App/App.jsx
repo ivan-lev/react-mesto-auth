@@ -235,46 +235,6 @@ function App() {
       });
   };
 
-  const mainContent = () => {
-    return (
-      <Main
-        onEditAvatar={handleEditAvatarClick}
-        onEditProfile={handleEditProfileClick}
-        onAddPlace={handleAddPlaceClick}
-        cards={cards}
-        setCards={setCards}
-        onCardClick={handleCardClick}
-        onCardLike={handleCardLike}
-        onCardDeleteClick={handleDeleteButtonClick}
-      >
-        <EditProfilePopup
-          isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopups}
-          onUpdateUser={handleUpdateUser}
-        />
-
-        <AddPlacePopup
-          isOpen={isAddPlacePopupOpen}
-          onClose={closeAllPopups}
-          onAddPlace={handleAddPlaceSubmit}
-        />
-
-        <EditAvatarPopup
-          isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopups}
-          onUpdateAvatar={handleUpdateAvatar}
-        />
-
-        <DeleteCardPopup
-          isOpen={isCardDeletePopupOpen}
-          onClose={closeAllPopups}
-          onCardDelete={handleCardDeleteWithPopup}
-        />
-        <ImagePopup onClose={closeAllPopups} name={selectedCard?.name} link={selectedCard?.link} />
-      </Main>
-    );
-  };
-
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
@@ -284,7 +244,47 @@ function App() {
             <Route
               path="/"
               element={
-                <ProtectedRouteElement element={loggedIn && mainContent} loggedIn={loggedIn} />
+                <ProtectedRouteElement loggedIn={loggedIn}>
+                  <Main
+                    onEditAvatar={handleEditAvatarClick}
+                    onEditProfile={handleEditProfileClick}
+                    onAddPlace={handleAddPlaceClick}
+                    cards={cards}
+                    setCards={setCards}
+                    onCardClick={handleCardClick}
+                    onCardLike={handleCardLike}
+                    onCardDeleteClick={handleDeleteButtonClick}
+                  >
+                    <EditProfilePopup
+                      isOpen={isEditProfilePopupOpen}
+                      onClose={closeAllPopups}
+                      onUpdateUser={handleUpdateUser}
+                    />
+
+                    <AddPlacePopup
+                      isOpen={isAddPlacePopupOpen}
+                      onClose={closeAllPopups}
+                      onAddPlace={handleAddPlaceSubmit}
+                    />
+
+                    <EditAvatarPopup
+                      isOpen={isEditAvatarPopupOpen}
+                      onClose={closeAllPopups}
+                      onUpdateAvatar={handleUpdateAvatar}
+                    />
+
+                    <DeleteCardPopup
+                      isOpen={isCardDeletePopupOpen}
+                      onClose={closeAllPopups}
+                      onCardDelete={handleCardDeleteWithPopup}
+                    />
+                    <ImagePopup
+                      onClose={closeAllPopups}
+                      name={selectedCard?.name}
+                      link={selectedCard?.link}
+                    />
+                  </Main>
+                </ProtectedRouteElement>
               }
             />
             <Route
